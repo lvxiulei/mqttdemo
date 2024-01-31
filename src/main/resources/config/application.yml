@@ -1,0 +1,20 @@
+server:
+  port: 41020
+  servlet:
+    context-path: /mqtt
+async:
+  pool:
+    instant:
+      core: 6
+      max: 12
+      queue: 10
+      keepAlive: 30
+mqtt:
+  server-uri: tcp://127.0.0.1:1883
+  username: "mqtt_dev"
+  password: "mqtt@2024"
+  topics:
+#    - topic: $queue/SVC/BT/103/+
+#    - topic: $queue/SVC/BT/103/+/+
+#    - topic: $queue/SVC/BT/103/#
+    - topic: SVC/BMS/1/#

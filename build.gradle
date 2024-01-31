@@ -1,0 +1,38 @@
+plugins {
+	id("java")
+	id("org.jetbrains.kotlin.jvm") version '1.9.0'
+	id("org.jetbrains.kotlin.plugin.spring") version '1.9.0'
+	id("org.springframework.boot") version "3.2.1"
+	id("io.spring.dependency-management") version "1.1.4"
+}
+
+group = "com.piggy"
+version = "0.0.1-SNAPSHOT"
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+	maven { url 'https://maven.aliyun.com/repository/public' }
+	mavenCentral()
+}
+
+dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	// kotlin
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
+	// mqtt
+	implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+	// tools
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+	implementation 'org.apache.commons:commons-collections4:4.4'
+	implementation 'com.alibaba.fastjson2:fastjson2:2.0.26'
+	implementation 'commons-beanutils:commons-beanutils:1.9.4'
+	implementation("org.netbeans.external:org-apache-commons-codec:RELEASE200")
+
+}
+
