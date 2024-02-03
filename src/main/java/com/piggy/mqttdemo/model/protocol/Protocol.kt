@@ -11,11 +11,11 @@ import kotlin.properties.Delegates
 open class Protocol {
 
     lateinit var bytes: ByteArray // payload
-    lateinit var topic: String  // 消息主题
-    lateinit var deviceId: String  // 设备ID
+    open lateinit var topic: String  // 消息主题
+    open lateinit var deviceId: String  // 设备ID
+    open var msgType by Delegates.notNull<Short>() // 消息类型 对应协议的消息ID(示例：0x2704)
+    open var txnNo by Delegates.notNull<Short>()   // 消息流水号
     var protocolVersion: Int = 1  // 协议版本号
-    var msgType by Delegates.notNull<Short>() // 消息类型 对应协议的消息ID(0x2704)
-    var msgId by Delegates.notNull<Short>()   // 消息流水号
 
     override fun toString(): String {
         return "Protocol(" +
@@ -24,7 +24,7 @@ open class Protocol {
                 "deviceId='$deviceId', " +
                 "protocolVersion=$protocolVersion, " +
                 "msgType=$msgType, " +
-                "msgId=$msgId)"
+                "txnNo=$txnNo)"
     }
 
 }

@@ -10,7 +10,7 @@ import com.piggy.mqttdemo.model.protocol.Protocol
 open class InputMessageProtocol : Protocol() {}
 
 class DeviceReplyProtocol: InputMessageProtocol() {
-    var replyMsgId: Int = 0                   //应答消息ID
+    var replyTxnNo: Int = 0                   //应答消息ID
     var replyMsgType: Int = 0x00               //应答消息类型
     var replyCode: Byte = 0x00                  //应答结果码
 }
@@ -20,7 +20,7 @@ class DeviceReplyProtocol: InputMessageProtocol() {
  * 0x2702
  */
 open class DeviceBaseProtocol : InputMessageProtocol() {
-    var replyMsgId: Int = 0x00                  // 应答消息ID
+    var replyTxnNo: Int = 0x00                  // 应答消息ID
     var batteryManufacturerId: Byte = 0x00      // 制造商标识 电池厂商标记
     var bmsManufacturerId: Byte = 0x00          // 制造商标识 保护板厂商标记
     var hardwareVersion: String = ""            // 设备的硬件版本信息
@@ -36,6 +36,6 @@ open class DeviceBaseProtocol : InputMessageProtocol() {
     var bmsHardwareVersion: String = ""         // BMS硬件版本
     var bmsCode: String = ""                    // BMS编码
     override fun toString(): String {
-        return "DeviceBaseProtocol(replyMsgId=$replyMsgId, batteryManufacturerId=$batteryManufacturerId, bmsManufacturerId=$bmsManufacturerId, hardwareVersion='$hardwareVersion', softVersion='$softVersion', imei='$imei', iccid='$iccid', imsi='$imsi', configId=$configId, supportInfo=$supportInfo, versionCode=$versionCode, versionName=$versionName, bmsSoftVersion='$bmsSoftVersion', bmsHardwareVersion='$bmsHardwareVersion', bmsCode='$bmsCode')"
+        return "DeviceBaseProtocol(replyTxnNo=$replyTxnNo, batteryManufacturerId=$batteryManufacturerId, bmsManufacturerId=$bmsManufacturerId, hardwareVersion='$hardwareVersion', softVersion='$softVersion', imei='$imei', iccid='$iccid', imsi='$imsi', configId=$configId, supportInfo=$supportInfo, versionCode=$versionCode, versionName=$versionName, bmsSoftVersion='$bmsSoftVersion', bmsHardwareVersion='$bmsHardwareVersion', bmsCode='$bmsCode')"
     }
 }

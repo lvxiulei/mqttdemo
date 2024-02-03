@@ -15,7 +15,7 @@ class DeviceReplyProtocolMessage(bytes: ByteArray, topic: String) : InputMessage
      * 解析消息主体
      */
     override fun analyzeBody(buffer: ByteBuffer) {
-        protocol.replyMsgId = buffer.getShort(0).toUShort().toInt()
+        protocol.replyTxnNo = buffer.getShort(0).toUShort().toInt()
         protocol.replyMsgType = buffer.getShort(2).toUShort().toInt()
         protocol.replyCode = buffer.get(4)
         println(protocol)

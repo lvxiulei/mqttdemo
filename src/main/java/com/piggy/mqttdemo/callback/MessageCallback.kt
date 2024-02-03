@@ -2,6 +2,7 @@ package com.piggy.mqttdemo.callback
 
 import com.piggy.mqttdemo.listener.MqttMessageListener
 import com.piggy.mqttdemo.utils.ByteUtils
+import org.apache.tomcat.util.buf.HexUtils
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttMessage
@@ -36,6 +37,6 @@ class MessageCallback(private var mqttMessageListener: MqttMessageListener) : Mq
      * 消息发布者发布完成触发该回调
      */
     override fun deliveryComplete(token: IMqttDeliveryToken?) {
-        log.info("****消息发布完成-[deliveryComplete], messageId=${token?.messageId}, topics=${token?.topics}")
+        log.info("****消息发布完成-[deliveryComplete], messageId=${token?.messageId}, topics=${token?.topics?.get(0)}")
     }
 }

@@ -8,6 +8,7 @@ import com.piggy.mqttdemo.event.reply.DeviceReplyEvent
 import com.piggy.mqttdemo.event.reply.SendMessageToDeviceEvent
 import com.piggy.mqttdemo.event.upstream.DeviceBaseEvent
 import com.piggy.mqttdemo.service.IMessageService
+import com.piggy.mqttdemo.utils.CRC16Util
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -51,6 +52,10 @@ class MessageServiceImpl : IMessageService {
                 }
                 "2702" -> {  //终端登录 - 0x2702
                     val protocol = DeviceBaseProtocolMessage(event.message.payload, event.topic)
+                    val crc16Arr = ByteArray(event.message.payload.size - 2)
+                    System.arraycopy(event.message.payload, 0, crc16Arr, 0, crc16Arr.size)
+                    val crc16 = CRC16Util.crc16(crc16Arr)
+                    log.info("crc16:$crc16")
                     context.publishEvent(DeviceBaseEvent(protocol))
                 }
             }
@@ -66,7 +71,7 @@ class MessageServiceImpl : IMessageService {
     @Async("mqttSendTask")
     @EventListener
     override fun sendMsg(event: SendMessageToDeviceEvent) {
-        val topic = event.protocol.topic
+        val topic = "DEV/BMS/1/${event.protocol.deviceId}"
         mqttSend.sendMsg(event.protocol.bytes, topic)
     }
 

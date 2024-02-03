@@ -2,7 +2,9 @@ package com.piggy.mqttdemo.analyze
 
 import com.piggy.mqttdemo.exception.CRC16CheckException
 import com.piggy.mqttdemo.model.protocol.Protocol
+import com.piggy.mqttdemo.utils.CRC16Util
 import com.piggy.mqttdemo.utils.MessageIDUtils
+import com.piggy.mqttdemo.utils.checkCrc
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.Serializable
@@ -50,9 +52,9 @@ abstract class InputMessage<T : Protocol>(private var bytes: ByteArray, protecte
      */
     private fun analyze() {
         val buffer = ByteBuffer.wrap(bytes)
-//        if (bytes[0].toInt() != 0x37) { //0x37命令不校验crc16
-//            if (!checkCrc(buffer)) throw CRC16CheckException(bytes)  //crc 校验失败，抛出异常
-//        }
+        if (bytes[0].toInt() != 0x37) { // 0x37命令不校验crc16
+            if (!checkCrc(buffer)) throw CRC16CheckException(bytes)  //crc 校验失败，抛出异常
+        }
         analyzeHeader(buffer)
         val bodyBytes = ByteArray(bytes.size - 4)
         System.arraycopy(bytes, 4, bodyBytes, 0, bodyBytes.size)
@@ -64,7 +66,7 @@ abstract class InputMessage<T : Protocol>(private var bytes: ByteArray, protecte
      */
     private fun analyzeHeader(buffer: ByteBuffer) {
         protocol.msgType = buffer.getShort(0)
-        protocol.msgId = buffer.getShort(2)
+        protocol.txnNo = buffer.getShort(2)
     }
 
     /**
@@ -77,8 +79,8 @@ abstract class InputMessage<T : Protocol>(private var bytes: ByteArray, protecte
 /**
  * 输出消息， 对象 ——> 数据流
  */
-abstract class OutPutMessage<T: Protocol>(protected var protocol: T) : Message<T> {
-    lateinit var bytes: ByteArray
+abstract class OutPutMessage<T : Protocol>(protected var protocol: T) : Message<T> {
+    private lateinit var bytes: ByteArray
 
     override fun getData(): T {
         buildMsg()
@@ -87,15 +89,18 @@ abstract class OutPutMessage<T: Protocol>(protected var protocol: T) : Message<T
 
     private fun buildMsg() {
         val body = buildBody(protocol)
-        ByteBuffer.allocate(body.size + 4)
-
-
+        val buffer = ByteBuffer.allocate(body.size + 4)
+        buildHeader(buffer)
+        buffer.put(body) // 追加
+        protocol.bytes = CRC16Util.appendCrc16Iot(buffer.array())
+        bytes = protocol.bytes
     }
 
     private fun buildHeader(buffer: ByteBuffer) {
         buffer.putShort(protocol.msgType)
-        val msgId = MessageIDUtils.getInstances().getMessageId(protocol.deviceId)
-        buffer.putShort(msgId)
+        buffer.putShort(protocol.txnNo)
+        // val txnNo = MessageIDUtils.getInstances().getMessageId(protocol.deviceId)
+        // buffer.putShort(txnNo)
     }
 
     protected abstract fun buildBody(protocol: T): ByteArray

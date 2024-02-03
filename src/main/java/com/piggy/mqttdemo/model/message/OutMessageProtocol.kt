@@ -13,9 +13,14 @@ open class OutMessageProtocol: Protocol() {
 
 /**
  * 服务器应答
+ * @param replyTxnNo 消息流水号
+ * @param replyMsgType 应答指令类型，应答的服务器端消息对应的消息类型
+ * @param replyCode 应答指令的结果，仅当结果0x01时代表成功，其他为具体消息定义的错误码
  */
-open class ServiceReplyProtocol: OutMessageProtocol() {
-    var replyMsgId: Short = 0                   //应答消息ID
-    var replyMsgType: Short = 0x00              //应答消息类型
-    var replyCode: Byte = 0x01                  //应答结果码
-}
+open class ServiceReplyProtocol(
+    var replyTxnNo: Short,
+    var replyMsgType: Short,
+    var replyCode: Byte,
+    override var msgType: Short,
+    override var txnNo: Short,
+    override var deviceId: String) : OutMessageProtocol()

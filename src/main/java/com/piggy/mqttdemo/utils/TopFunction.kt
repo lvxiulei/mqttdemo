@@ -3,6 +3,7 @@ package com.piggy.mqttdemo.utils
 import com.piggy.mqttdemo.analyze.output.ServiceReplyMessage
 import com.piggy.mqttdemo.config.ApplicationContextProvider
 import com.piggy.mqttdemo.event.reply.SendMessageToDeviceEvent
+import com.piggy.mqttdemo.model.message.ServiceReplyProtocol
 import com.piggy.mqttdemo.model.protocol.Protocol
 import java.nio.ByteBuffer
 
@@ -21,7 +22,16 @@ fun checkCrc(buffer: ByteBuffer): Boolean {
  * 响应设备应答
  */
 fun replyDevice(protocol: Protocol, source: String) {
-    val replyMsg = ServiceReplyMessage.createMsg(protocol.deviceId, 0x01, protocol.msgId, protocol.msgType)
+    val replyMsg = ServiceReplyMessage(
+        ServiceReplyProtocol(
+            protocol.txnNo,
+            protocol.msgType,
+            0x01,
+            protocol.msgType,
+            protocol.txnNo,
+            protocol.deviceId
+        )
+    )
     val event = SendMessageToDeviceEvent(replyMsg.getData(), source)
     ApplicationContextProvider.applicationContext!!.publishEvent(event)
 }

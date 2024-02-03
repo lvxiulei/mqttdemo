@@ -17,7 +17,7 @@ class DeviceBaseProtocolMessage(bytes: ByteArray, topic: String) : InputMessage<
 
     override fun analyzeBody(buffer: ByteBuffer) {
         val bytes = buffer.array()
-        protocol.replyMsgId = buffer.getShort(0).toUShort().toInt()
+        protocol.replyTxnNo = buffer.getShort(0).toUShort().toInt()
         protocol.batteryManufacturerId = buffer.get(2)
         protocol.bmsManufacturerId = buffer.get(3)
         protocol.hardwareVersion = String(bytes, 4, 8, Charsets.US_ASCII)

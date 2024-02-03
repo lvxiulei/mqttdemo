@@ -1,5 +1,6 @@
 package com.piggy.mqttdemo.client
 
+import com.piggy.mqttdemo.utils.ByteUtils
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -41,7 +42,7 @@ class MqttSendTemplate(private var mqttConnection: MqttConnection) {
         message.payload = data
         if (mqttConnection._mqttClient == null) return
         mqttConnection._mqttClient!!.publish(topic, message)
-        log.info("MQTT_SEND: [topic: $topic qos: $qos] --> msg:${data.toHexString()}")
+        log.info("MQTT_SEND: [topic: $topic qos: $qos] --> msg:${ByteUtils.getHexString(data)}")
     }
 
 }

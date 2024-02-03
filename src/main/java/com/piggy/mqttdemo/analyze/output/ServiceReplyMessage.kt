@@ -12,20 +12,9 @@ import java.nio.ByteBuffer
 class ServiceReplyMessage(protocol: ServiceReplyProtocol) : OutPutMessage<ServiceReplyProtocol>(protocol) {
     private val length = 5
 
-    companion object {
-        fun createMsg(clientId: String, replyCode: Byte, replyMsgId: Short, replyType: Short): ServiceReplyMessage {
-            val replyProtocol = ServiceReplyProtocol()
-            replyProtocol.replyCode = replyCode
-            replyProtocol.replyMsgId = replyMsgId
-            replyProtocol.replyMsgType = replyType
-            replyProtocol.deviceId = clientId
-            return ServiceReplyMessage(replyProtocol)
-        }
-    }
-
     override fun buildBody(protocol: ServiceReplyProtocol): ByteArray {
         val buffer = ByteBuffer.allocate(length)
-        buffer.putShort(protocol.replyMsgId)
+        buffer.putShort(protocol.replyTxnNo)
         buffer.putShort(protocol.replyMsgType)
         buffer.put(protocol.replyCode)
         return buffer.array()
